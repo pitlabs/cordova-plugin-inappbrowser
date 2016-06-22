@@ -88,6 +88,8 @@
         NSURL* baseUrl = [self.webView.request URL];
 #endif
         NSURL* absoluteUrl = [[NSURL URLWithString:url relativeToURL:baseUrl] absoluteURL];
+        
+        self.originalUrl = absoluteUrl;
 
         if ([self isSystemUrl:absoluteUrl]) {
             target = kInAppBrowserTargetSystem;
@@ -535,6 +537,10 @@
 
     self.closeButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close)];
     self.closeButton.enabled = YES;
+    
+    self.openExternallyButton = [[UIBarButtonItem alloc] initWithTitle:@"Open in Safari" style:UIBarButtonItemStyleBordered target:self action:@selector(openExternally)];
+    self.openExternallyButton.enabled = YES;
+    self.openExternallyButton.tintColor = [UIColor colorWithRed:60.0 / 255.0 green:136.0 / 255.0 blue:230.0 / 255.0 alpha:1];
 
     UIBarButtonItem* flexibleSpaceButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
@@ -599,7 +605,7 @@
     self.backButton.enabled = YES;
     self.backButton.imageInsets = UIEdgeInsetsZero;
 
-    [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.backButton, fixedSpaceButton, self.forwardButton]];
+    [self.toolbar setItems:@[self.closeButton, flexibleSpaceButton, self.backButton, fixedSpaceButton, self.forwardButton, flexibleSpaceButton, self.openExternallyButton]];
 
     self.view.backgroundColor = [UIColor grayColor];
     [self.view addSubview:self.toolbar];
@@ -778,6 +784,14 @@
             [[weakSelf parentViewController] dismissViewControllerAnimated:YES completion:nil];
         }
     });
+}
+
+- (void)openExternally
+{
+    // Open external browser
+    [self.navigationDelegate openInSystem:self.navigationDelegate.originalUrl];
+    
+    [self close];
 }
 
 - (void)navigateTo:(NSURL*)url
