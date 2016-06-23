@@ -30,12 +30,12 @@
 @class CDVInAppBrowserViewController;
 
 @interface CDVInAppBrowser : CDVPlugin {
-    BOOL _injectedIframeBridge;
 }
 
 @property (nonatomic, retain) CDVInAppBrowserViewController* inAppBrowserViewController;
 @property (nonatomic, copy) NSString* callbackId;
 @property (nonatomic, copy) NSRegularExpression *callbackIdPattern;
+@property (nonatomic) NSURL* originalUrl;
 
 - (void)open:(CDVInvokedUrlCommand*)command;
 - (void)close:(CDVInvokedUrlCommand*)command;
@@ -85,6 +85,7 @@
 
 @property (nonatomic, strong) IBOutlet UIWebView* webView;
 @property (nonatomic, strong) IBOutlet UIBarButtonItem* closeButton;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem* openExternallyButton;
 @property (nonatomic, strong) IBOutlet UILabel* addressLabel;
 @property (nonatomic, strong) IBOutlet UIBarButtonItem* backButton;
 @property (nonatomic, strong) IBOutlet UIBarButtonItem* forwardButton;
@@ -96,6 +97,7 @@
 @property (nonatomic) NSURL* currentURL;
 
 - (void)close;
+- (void)openExternally;
 - (void)navigateTo:(NSURL*)url;
 - (void)showLocationBar:(BOOL)show;
 - (void)showToolBar:(BOOL)show : (NSString *) toolbarPosition;
