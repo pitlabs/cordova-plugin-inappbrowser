@@ -648,11 +648,17 @@
     self.forwardButton = [[UIBarButtonItem alloc] initWithTitle:frontArrowString style:UIBarButtonItemStylePlain target:self action:@selector(goForward:)];
     self.forwardButton.enabled = YES;
     self.forwardButton.imageInsets = UIEdgeInsetsZero;
+    if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
+      self.forwardButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
+    }
 
     NSString* backArrowString = NSLocalizedString(@"◄", nil); // create arrow from Unicode char
     self.backButton = [[UIBarButtonItem alloc] initWithTitle:backArrowString style:UIBarButtonItemStylePlain target:self action:@selector(goBack:)];
     self.backButton.enabled = YES;
     self.backButton.imageInsets = UIEdgeInsetsZero;
+    if (_browserOptions.navigationbuttoncolor != nil) { // Set button color if user sets it in options
+      self.backButton.tintColor = [self colorFromHexString:_browserOptions.navigationbuttoncolor];
+    }
 
     // Filter out Navigation Buttons if user requests so
     if (_browserOptions.hidenavigationbuttons) {
@@ -926,7 +932,10 @@
     self.backButton.enabled = theWebView.canGoBack;
     self.forwardButton.enabled = theWebView.canGoForward;
 
-    [self.spinner startAnimating];
+    NSLog(_browserOptions.hidespinner ? @"Yes" : @"No");
+    if(!_browserOptions.hidespinner) {
+        [self.spinner startAnimating];
+    }
 
     return [self.navigationDelegate webViewDidStartLoad:theWebView];
 }
@@ -1026,6 +1035,7 @@
         self.toolbarposition = kInAppBrowserToolbarBarPositionBottom;
         self.clearcache = NO;
         self.clearsessioncache = NO;
+        self.hidespinner = NO;
 
         self.enableviewportscale = NO;
         self.mediaplaybackrequiresuseraction = NO;
